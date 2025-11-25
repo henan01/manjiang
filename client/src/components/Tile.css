@@ -1,0 +1,26 @@
+/* Tile 组件样式已在 index.css 中定义 */
+
+.tile-container {
+  display: flex;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+}
+
+.tile-row {
+  display: flex;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-sm);
+}
+
+@media (max-width: 768px) {
+  .tile {
+    width: 40px;
+    height: 56px;
+    font-size: 16px;
+  }
+  
+  .tile.feng,
+  .tile.jian {
+    font-size: 14px;
+  }
+}

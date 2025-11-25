@@ -1,0 +1,515 @@
+.game-page {
+  min-height: 100vh;
+  padding: var(--spacing-md);
+}
+
+.game-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: var(--spacing-lg);
+}
+
+.game-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-lg);
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-lg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.room-info-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.game-status {
+  padding: var(--spacing-xs) var(--spacing-md);
+  background: rgba(212, 175, 55, 0.2);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-md);
+  color: var(--accent-light);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.spectator-badge {
+  padding: var(--spacing-xs) var(--spacing-md);
+  background: rgba(33, 150, 243, 0.2);
+  border: 1px solid var(--info);
+  border-radius: var(--radius-md);
+  color: var(--info);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.deck-count {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.game-table {
+  background: linear-gradient(135deg, var(--table-green) 0%, var(--primary-dark) 100%);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  min-height: 600px;
+  box-shadow: var(--shadow-xl);
+  border: 4px solid var(--table-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.other-players {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.player-area {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  transition: all var(--transition-normal);
+}
+
+.player-area.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+.player-area.offline {
+  opacity: 0.6;
+  border-color: rgba(244, 67, 54, 0.5);
+}
+
+.player-area.offline::after {
+  content: '掉线';
+  position: absolute;
+  top: var(--spacing-xs);
+  right: var(--spacing-xs);
+  padding: 2px 8px;
+  background: var(--error);
+  color: white;
+  font-size: 0.75rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+
+.btn-sm {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: 0.85rem;
+  margin-top: var(--spacing-xs);
+}
+
+.player-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.player-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.hand-count {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.discarded-tiles-small {
+  display: flex;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+  margin-top: var(--spacing-sm);
+}
+
+.discarded-tiles-small .tile {
+  width: 30px;
+  height: 42px;
+  font-size: 14px;
+}
+
+.melds {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.meld-group {
+  display: flex;
+  gap: 2px;
+  padding: var(--spacing-xs);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-sm);
+}
+
+.meld-group .tile {
+  width: 35px;
+  height: 49px;
+  font-size: 16px;
+}
+
+.center-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.table-surface {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  min-width: 300px;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+}
+
+.last-discarded {
+  text-align: center;
+}
+
+.last-discarded p {
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-sm);
+  font-size: 0.9rem;
+}
+
+.my-area {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  border: 2px solid rgba(212, 175, 55, 0.3);
+}
+
+.my-info {
+  margin-bottom: var(--spacing-md);
+}
+
+.my-name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--accent-light);
+}
+
+.waiting-area {
+  text-align: center;
+  padding: var(--spacing-xl);
+}
+
+.waiting-area p {
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-lg);
+  font-size: 1.1rem;
+}
+
+.hand-tiles {
+  display: flex;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-md);
+  min-height: 90px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.special-actions {
+  width: 100%;
+  text-align: center;
+  padding: var(--spacing-md);
+  background: rgba(212, 175, 55, 0.1);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-md);
+  animation: pulse 2s infinite;
+}
+
+.special-actions p {
+  color: var(--accent-light);
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+}
+
+.action-btns {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(212, 175, 55, 0);
+  }
+}
+
+/* 观战者面板 */
+.spectators-panel {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  border: 2px solid rgba(33, 150, 243, 0.3);
+  margin-top: var(--spacing-md);
+}
+
+.spectators-panel h3 {
+  color: var(--info);
+  font-size: 1rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.spectators-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+
+.spectator-item {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: rgba(33, 150, 243, 0.1);
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+}
+
+/* 观战者视图 */
+.spectator-view {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  border: 2px solid rgba(33, 150, 243, 0.3);
+  text-align: center;
+}
+
+.spectator-info h3 {
+  color: var(--info);
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.spectator-info p {
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.spectator-info .hint {
+  color: var(--accent-light);
+  font-size: 0.9rem;
+  margin-top: var(--spacing-md);
+}
+
+/* 玩家选择网格 */
+.player-select-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}
+
+.player-select-card {
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(33, 150, 243, 0.3);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  transition: all var(--transition-normal);
+}
+
+.player-select-card:hover {
+  border-color: var(--info);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
+}
+
+.player-select-info h4 {
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  margin-bottom: var(--spacing-xs);
+}
+
+.player-select-info p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.spectator-count {
+  color: var(--info) !important;
+  font-weight: 600;
+}
+
+/* 观战者手牌显示 */
+.spectator-hand-tiles {
+  margin-top: var(--spacing-lg);
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+}
+
+.spectator-hand-tiles h4 {
+  color: var(--accent-light);
+  margin-bottom: var(--spacing-md);
+}
+
+/* 观战申请面板 */
+.spectate-requests-panel {
+  background: rgba(212, 175, 55, 0.1);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  margin-top: var(--spacing-md);
+  animation: slideIn 0.3s ease-out;
+}
+
+.spectate-requests-panel h3 {
+  color: var(--accent-light);
+  font-size: 1rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.requests-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.request-item {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.request-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.requester-name {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.request-text {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.request-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #4caf50, #45a049);
+  color: white;
+}
+
+.btn-success:hover {
+  background: linear-gradient(135deg, #45a049, #3d8b40);
+}
+
+.btn-error {
+  background: linear-gradient(135deg, #f44336, #da190b);
+  color: white;
+}
+
+.btn-error:hover {
+  background: linear-gradient(135deg, #da190b, #c41606);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .game-header {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .room-info-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .game-table {
+    padding: var(--spacing-md);
+  }
+
+  .other-players {
+    grid-template-columns: 1fr;
+  }
+
+  .hand-tiles .tile {
+    width: 40px;
+    height: 56px;
+    font-size: 16px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .action-buttons .btn {
+    width: 100%;
+  }
+}
