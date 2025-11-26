@@ -29,7 +29,7 @@ io.on('connection', (socket) => {
     userSockets.set(userId, socket.id);
     socket.userId = userId;
     socket.userName = userName;
-    
+
     socket.emit('login_success', { userId, userName });
     console.log(`用户登录: ${userName} (${userId})`);
   });
@@ -43,17 +43,20 @@ io.on('connection', (socket) => {
 
     const room = roomManager.createRoom(socket.userId, socket.userName);
     socket.join(room.id);
-    
+    socket.currentRoom = room.id;
+    socket.userRole = 'player';
+
     socket.emit('room_created', { roomId: room.id });
+    socket.emit('joined_room', { roomId: room.id, role: 'player', message: '房间创建成功' });
     io.to(room.id).emit('room_update', room.getRoomState());
-    
+
     console.log(`房间创建: ${room.id} by ${socket.userName}`);
   });
 
   // 加入房间
   socket.on('join_room', (data) => {
     const { roomId } = data;
-    
+
     if (!socket.userId) {
       socket.emit('error', { message: '请先登录' });
       return;
@@ -74,14 +77,14 @@ io.on('connection', (socket) => {
     socket.join(roomId);
     socket.currentRoom = roomId;
     socket.userRole = result.role;  // 'player' 或 'spectator'
-    
+
     // 通知用户他的角色
-    socket.emit('joined_room', { 
-      roomId, 
+    socket.emit('joined_room', {
+      roomId,
       role: result.role,
-      message: result.message 
+      message: result.message
     });
-    
+
     io.to(roomId).emit('room_update', room.getRoomState());
     console.log(`${socket.userName} 以${result.role === 'player' ? '玩家' : '观战者'}身份加入房间 ${roomId}`);
   });
@@ -93,7 +96,7 @@ io.on('connection', (socket) => {
       if (room) {
         room.removePlayer(socket.userId);
         socket.leave(socket.currentRoom);
-        
+
         if (room.players.length === 0) {
           roomManager.deleteRoom(socket.currentRoom);
           console.log(`房间已删除: ${socket.currentRoom}`);
@@ -131,7 +134,7 @@ io.on('connection', (socket) => {
 
     // 通知所有玩家游戏开始
     io.to(socket.currentRoom).emit('game_started', room.getRoomState());
-    
+
     // 给每个玩家发送他们的手牌
     room.players.forEach(player => {
       const socketId = userSockets.get(player.id);
@@ -140,7 +143,7 @@ io.on('connection', (socket) => {
           tiles: player.handTiles
         });
       }
-      
+
       // 给授权的观战者发送手牌
       const spectators = room.getPlayerSpectators(player.id);
       spectators.forEach(spectator => {
@@ -161,7 +164,7 @@ io.on('connection', (socket) => {
   socket.on('discard_tile', (data) => {
     const { tileId } = data;
     const room = roomManager.getRoom(socket.currentRoom);
-    
+
     if (!room) {
       socket.emit('error', { message: '房间不存在' });
       return;
@@ -200,7 +203,7 @@ io.on('connection', (socket) => {
   // 摸牌
   socket.on('draw_tile', () => {
     const room = roomManager.getRoom(socket.currentRoom);
-    
+
     if (!room) {
       socket.emit('error', { message: '房间不存在' });
       return;
@@ -219,7 +222,7 @@ io.on('connection', (socket) => {
   // 碰牌
   socket.on('peng', () => {
     const room = roomManager.getRoom(socket.currentRoom);
-    
+
     if (!room) {
       socket.emit('error', { message: '房间不存在' });
       return;
@@ -247,11 +250,11 @@ io.on('connection', (socket) => {
     if (room) {
       room.nextPlayer();
       io.to(socket.currentRoom).emit('room_update', room.getRoomState());
-      
+
       // 下一个玩家摸牌
       const nextPlayer = room.players[room.currentPlayerIndex];
       const drawResult = room.drawTile(nextPlayer.id);
-      
+
       if (drawResult.success) {
         const socketId = userSockets.get(nextPlayer.id);
         if (socketId) {
@@ -265,7 +268,7 @@ io.on('connection', (socket) => {
   socket.on('take_seat', (data) => {
     const { seatIndex } = data;
     const room = roomManager.getRoom(socket.currentRoom);
-    
+
     if (!room) {
       socket.emit('error', { message: '房间不存在' });
       return;
@@ -284,7 +287,7 @@ io.on('connection', (socket) => {
 
     // 更新角色
     socket.userRole = 'player';
-    
+
     // 通知所有人
     io.to(socket.currentRoom).emit('player_took_seat', {
       playerId: socket.userId,
@@ -304,7 +307,7 @@ io.on('connection', (socket) => {
   socket.on('request_spectate', (data) => {
     const { targetPlayerId } = data;
     const room = roomManager.getRoom(socket.currentRoom);
-    
+
     if (!room) {
       socket.emit('error', { message: '房间不存在' });
       return;
@@ -341,7 +344,7 @@ io.on('connection', (socket) => {
   socket.on('approve_spectate', (data) => {
     const { requestId } = data;
     const room = roomManager.getRoom(socket.currentRoom);
-    
+
     if (!room) {
       socket.emit('error', { message: '房间不存在' });
       return;
@@ -359,7 +362,7 @@ io.on('connection', (socket) => {
       io.to(spectatorSocketId).emit('spectate_approved', {
         request: result.request
       });
-      
+
       // 发送目标玩家的手牌给观战者
       const player = room.players.find(p => p.id === socket.userId);
       if (player) {
@@ -380,7 +383,7 @@ io.on('connection', (socket) => {
   socket.on('reject_spectate', (data) => {
     const { requestId } = data;
     const room = roomManager.getRoom(socket.currentRoom);
-    
+
     if (!room) {
       socket.emit('error', { message: '房间不存在' });
       return;
@@ -421,12 +424,12 @@ io.on('connection', (socket) => {
   // 断开连接
   socket.on('disconnect', () => {
     console.log('用户断开:', socket.id);
-    
+
     if (socket.currentRoom) {
       const room = roomManager.getRoom(socket.currentRoom);
       if (room) {
         const result = room.removePlayer(socket.userId);
-        
+
         // 如果是游戏中掉线，通知其他玩家
         if (result.offline) {
           io.to(socket.currentRoom).emit('player_offline', {
